@@ -12,7 +12,7 @@
  * Plugin Name:       Propostas
  * Plugin URI:        http://opensource.quijaua.com.br
  * Description:       Plugin que gerencia propostas
- * Version:           0.1.0
+ * Version:           0.1.1
  * Author:            Rafael Bantu, Eduardo Alencar
  * Author URI:        http://github.com/Quijaua/propostas
  * License:           GPL-3.0+
