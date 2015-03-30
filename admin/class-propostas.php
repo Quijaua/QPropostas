@@ -150,9 +150,6 @@ class Propostas_Admin {
             'use_category' => true,
         ), $atts );
 
-        var_dump($shortcode_atts);
-        var_dump($shortcode_atts["use_category"]);
-
         $html = '<form id="frm-inscricao" method="post" action="" enctype="multipart/form-data">
             <fieldset>';
 
