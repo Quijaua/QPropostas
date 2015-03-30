@@ -146,6 +146,12 @@ class Propostas_Admin {
     }
     public function inscreva_se_shortcode($atts) {
 
+        $shortcode_atts = shortcode_atts( array(
+            'use_category' => true,
+        ), $atts );
+
+        var_dump($shortcode_atts);
+        var_dump($shortcode_atts["use_category"]);
 
         $html = '<form id="frm-inscricao" method="post" action="" enctype="multipart/form-data">
             <fieldset>';
@@ -231,23 +237,26 @@ class Propostas_Admin {
 
                 <label for="trabalho_foto">Suba uma foto desse trabalho:
                     <input type="file" id="trabalho_foto" name="trabalho_foto" />
-                </label><br />
+                </label><br />';
 
-                 <label for="categorias_apresentacao">Categorias de apresentacões artísticas:
+                if("true" == $shortcode_atts["use_category"]) {
+                    $html .= '<label for="categorias_apresentacao">Categorias de apresentacões artísticas:
                     <select name="categorias_apresentacao" id="categorias_apresentacao">
                         <option value="">Selecione</option>';
-                        $categorias = get_terms( 'categoria-apresentacao-artistica', array(
-                            'orderby'    => 'count',
-                            'hide_empty' => 0
-                         ) );
-                        foreach($categorias as $categoria) {
-                            $html .= '<option value="'.$categoria->term_id.'">'.$categoria->name.'</option>';
-                        }
+                    $categorias = get_terms( 'categoria-apresentacao-artistica', array(
+                        'orderby'    => 'count',
+                        'hide_empty' => 0
+                    ) );
+                    foreach($categorias as $categoria) {
+                        $html .= '<option value="'.$categoria->term_id.'">'.$categoria->name.'</option>';
+                    }
                     $html .= '</select>
-                </label><br />
+                </label><br />';
+                }
 
 
 
+        $html .='
                 <label for="trabalho_pessoas">Número de pessoas nessa apresentacão:</br>
                     <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_1" value="1"  />individual
                     <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_2" value="2"  />até 2 artistas envolvidos
