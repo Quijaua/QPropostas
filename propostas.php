@@ -39,7 +39,11 @@ require_once PLUGIN_DIR_PATH . 'admin/class-propostas-taxonomy.php';
 
 require_once PLUGIN_DIR_PATH . 'admin/class-propostas-meta-box.php';
 
+require_once PLUGIN_DIR_PATH . 'admin/class-settings-page.php';
+
 require_once PLUGIN_DIR_PATH . 'admin/class-propostas.php';
+
+
 
 
 function run_propostas() {
