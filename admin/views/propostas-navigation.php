@@ -1,5 +1,6 @@
 <?php
-$nome_proponente = !empty($detalhes_proposta['nome_proponente']) ? esc_attr($detalhes_proposta['nome_proponente']) : '';
+
+/*$nome_proponente = !empty($detalhes_proposta['nome_proponente']) ? esc_attr($detalhes_proposta['nome_proponente']) : '';
 $cnpj = !empty($detalhes_proposta['cnpj']) ? esc_attr($detalhes_proposta['cnpj']) : '';
 $email = !empty($detalhes_proposta['email']) ? esc_attr($detalhes_proposta['email']) : '';
 $estado = !empty($detalhes_proposta['estado']) ? esc_attr($detalhes_proposta['estado']) : '';
@@ -16,82 +17,77 @@ $trabalho_duracao = !empty($detalhes_proposta['trabalho_duracao']) ? esc_attr($d
 $trabalho_ficha_tecnica = !empty($detalhes_proposta['trabalho_ficha_tecnica']) ? esc_attr($detalhes_proposta['trabalho_ficha_tecnica']) : '';
 $trabalho_pessoas = !empty($detalhes_proposta['trabalho_pessoas']) ? (int)$detalhes_proposta['trabalho_pessoas'] : 0;
 $calendario = !empty($detalhes_proposta['calendario']) ? $detalhes_proposta['calendario'] : '';
-
+*/
 ?>
 <div id="proposalss-navigation">
     <fieldset>
-        <?php wp_nonce_field( 'detalhes_meta_box_nonce', 'meta_box_nonce' ); ?>
-        <label for="nome_proponente">Nome do proponente:
-            <input name="nome_proponente" type="text" id="nome_proponente" value="<?php echo $nome_proponente; ?>"  class="large-text"  />
-        </label>
+        <?php wp_nonce_field( 'detalhes_meta_box_nonce', 'meta_box_nonce' ); 
+        $html = '';
+        ?>
+        
+        <?php foreach($fields as $field):
 
-        <label for="cnpj">CNPJ:
-            <input name="cnpj" type="text" id="cnpj" value="<?php echo $cnpj; ?>"  class="large-text"  />
-        </label>
+            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] )
+                    {
+                        $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <input  name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="'.esc_attr($detalhes_proposta[$field['nome']]).'"  class="large-text"/>
+                        </label><br />';
 
-        <label for="email">E-mail:
-            <input name="email" type="text" id="email" value="<?php echo $email; ?>"  class="large-text"  />
-        </label>
+                        /*if("calendario" == $field['tipo']) 
+                        {
+                            $html .= '<div id="dialog-confirm" title="Alerta" style="display:none;">
+                                    <p>O dia de domingo é reservado para atividades para o público infantil, caso a sua não seja, favor escolher outros dias</p>
+                            </div>';
+                        }*/
+                    }
 
-        <label for="estado">Estado:
-            <select name="estado" id="estado" value="<?php echo $estado; ?>">
-            </select>
-        </label>
+                    if( "checkbox" == $field['tipo'])
+                    {
+                        $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br>';
 
-        <label for="municipio">Municipio:
-            <select name="municipio" id="municipio" value="<?php echo $municipio; ?>">
-            </select>
-        </label><br />
+                        $checked = absint($detalhes_proposta[$field['nome']]);
 
-        <label for="endereco">Endereço:
-            <input name="endereco" type="text" id="endereco" value="<?php echo $endereco; ?>"  class="large-text"  />
-        </label>
+                        foreach($field['valores'] as $key => $option) 
+                        {
+                            $checked = $detalhes_proposta[$field['nome']];
+                            $strChecked = '';
+                            if($checked === $option)
+                            {
+                                $strChecked = 'checked="checked"';
+                            }
+                            $html .= '<input name="'.$field['nome'].'" type="checkbox" value="'.$option.'" '.$strChecked.'/>'.$option;
+                        }
+                        $html .= '</label><br />';
+                    }
 
-        <label for="telefone">Telefone:
-            <input name="telefone" type="text" id="telefone" value="<?php echo $telefone; ?>"  class="large-text"  />
-        </label>
+                    if( "textarea" == $field['tipo'])
+                    {
+                        if(absint($field['obrigatorio']) === 1 )
+                        {
+                            $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
+                        }
+                        $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <textarea id="'.$field['nome'].'" name="'.$field['nome'].'" cols="80" rows="10"  class="large-text" '.$required .'>'.esc_attr($detalhes_proposta[$field['nome']]).'</textarea>
+                        </label><br />';
+                        
+                    }
 
-        <label for="site">Site:
-            <input name="site" type="text" id="site" value="<?php echo $site; ?>"  class="large-text"  />
-        </label>
+                    
+                    if( "select_estado" == $field['tipo'] OR "select_municipio" == $field['tipo'] ) 
+                    {
+                       
+                        $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                    <select name="'.$field['nome'].'" id="'.$field['nome'].'" value="'.esc_attr($detalhes_proposta[$field['nome']]).'">
+                        <option selected="selected" value="">Selecione</option>
+                    </select>
+                </label><br />';
+            }
+        ?>
 
-        <label for="facebook">Facebook:
-            <input name="facebook" type="text" id="facebook" value="<?php echo $facebook; ?>"  class="large-text"  />
-        </label>
-
-        <label for="twitter">Twitter:
-            <input name="twitter" type="text" id="twitter" value="<?php echo $twitter; ?>"  class="large-text"  />
-        </label>
-
-        <label for="instagram">Instagram:
-            <input name="instagram" type="text" id="instagram" value="<?php echo $instagram; ?>"  class="large-text"  />
-        </label>
-
-        <label for="responsavel_nome">Nome do responsável legal, coordenador(a) ou pessoa de contato do grupo:
-            <input name="responsavel_nome" type="text" id="responsavel_nome" value="<?php echo $responsavel_nome; ?>"  class="large-text"  />
-        </label>
-
-        <label for="responsavel_cpf">CPF:
-            <input name="responsavel_cpf" type="text" id="responsavel_cpf" value="<?php echo $responsavel_cpf; ?>"  class="large-text"  />
-        </label>
-
-        <label for="trabalho_duracao">Duração:
-            <input name="trabalho_duracao" type="text" id="trabalho_duracao" value="<?php echo $trabalho_duracao; ?>"  class="large-text"  />
-        </label>
-
-        <label for="trabalho_ficha_tecnica">Ficha Técnica:
-            <textarea id="trabalho_ficha_tecnica" name="trabalho_ficha_tecnica" cols="80" rows="10" class="large-text"><?php echo $trabalho_ficha_tecnica; ?></textarea>
-        </label>
-
-        <label for="trabalho_pessoas">Número de pessoas nessa apresentacão:</br>
-            <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_1" value="1" <?php checked( $trabalho_pessoas, 1 ); ?> />individual
-            <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_2" value="2" <?php checked( $trabalho_pessoas, 2 ); ?> />até 2 artistas envolvidos
-            <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_3" value="3" <?php checked( $trabalho_pessoas, 3 ); ?> />3 a 5 artistas envolvidos
-            <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_4" value="4" <?php checked( $trabalho_pessoas, 4 ); ?> />6 ou mais artistas envolvidos
-        </label>
-        <label for="calendario">Calendário:
-            <input name="calendario" type="text" id="calendario" value="<?php echo $calendario; ?>"  class="large-text"  />
-        </label>
+        <?php endforeach; 
+        echo $html;
+        ?>
+        
 
     </fieldset>
 

@@ -3,3 +3,5 @@
 	color: #4F8A10;
     background-color: #DFF2BF;
 }
+.error {border:solid 2px red;}
+span.error {color:red;}

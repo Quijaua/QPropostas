@@ -30,7 +30,7 @@ jQuery(function($){
 
     var
         $cnpj = $('#cnpj')
-       ,$cpf = $('#responsavel_cpf')
+       ,$cpf = $('#cpf')
        ,$telefone = $('#telefone')
        ,$frmInscricao = $('#frm-inscricao')
     ;
@@ -51,84 +51,24 @@ jQuery(function($){
             element.mask("(99) 9999-9999?9");
         }
     });
-
-    // Validate form
-     $frmInscricao.validate({
-        rules: {
-          'nome_proponente' : 'required',
-          'email' : {
-            'required' : true,
-            'email'    : true
-          },
-          'estado' : 'required',
-          'municipio'   : 'required',
-          'endereco'   : 'required' ,
-          'telefone'     : 'required',
-          'responsavel_nome' : 'required',
-          'responsavel_cpf' : 'required',
-          'trabalho_titulo' : 'required',
-          'trabalho_duracao': 'required',
-          'trabalho_descricao' : 'required',
-          'trabalho_ficha_tecnica' : 'required',
-          'trabalho_pessoas' : 'required',
-          'trabalho_foto' : 'required',
-          'categorias_apresentacao' : 'required'
-        },
-        messages : {
-          'nome_proponente' : {
-            'required' : 'Digite o nome do proponente'
-          },
-          'email' : {
-            'required' : 'Digite seu E-mail',
-            'email'    : 'Digite um E-mail válido'
-          },
-          'estado' : {
-            'required' : 'Selecione o estado'
-          },
-          'municipio' : {
-            'required' : 'Selecione o municipio'
-          },
-          'endereco' : {
-            'required' : 'Digite o endereço'
-          },
-          'telefone' : {
-            'required' : 'Digite o telefone'
-          },
-          'responsavel_nome' : {
-            'required' : 'Digite o nome do responsável'
-          },
-          'responsavel_cpf' : {
-            'required' : 'Digite o CPF do responsável'
-          },
-          'trabalho_titulo' : {
-            'required' : 'Digite o título do trabalho'
-          },
-          'trabalho_duracao' : {
-            'required' : 'Digite a duração do trabalho'
-          },
-          'trabalho_descricao' : {
-            'required' : 'Digite a descrição do trabalho'
-          },
-          'trabalho_ficha_tecnica' : {
-            'required' : 'Digite a ficha técnica do trabalho'
-          },
-          'trabalho_pessoas' : {
-            'required' : 'Escolha o número de pessoas nessa apresentação'
-          },
-          'trabalho_foto' : {
-            'required' : 'Escolha uma foto desse trabalho'
-          },
-          'categorias_apresentacao' : {
-            'required' : 'Selecione uma categoria de apresentação'
-          },
-        }
-
-      });
-
+    $frmInscricao.validate({
+        focusInvalid: false,
+        invalidHandler: function(form, validator) {
+            
+            if (!validator.numberOfInvalids())
+                return;
+            
+            $('html, body').animate({
+                scrollTop: $(validator.errorList[0].element).offset().top
+            }, 1000);
+            
+        }    
+    });
+        
         var today = new Date();
         var date = new Date(2015, 1, 9, 0, 0, 0, 0);
         //var y = today.getFullYear() + 1;
-        $('#calendario').multiDatesPicker({
+        $('.calendario').multiDatesPicker({
             onSelect: function(dateStr) {
                 var date_parts = dateStr.split("/");
 
@@ -138,15 +78,15 @@ jQuery(function($){
                       height:300,
                       modal: true,
                       buttons: {
-                        "Sim": function() {
+                        "OK": function() {
                           $( this ).dialog( "close" );
                         },
-                        "Não": function() {
+                        /*"Não": function() {
 
                           $("#calendario").val("");
 
                           $( this ).dialog( "close" );
-                        }
+                        }*/
                       }
                     });
 

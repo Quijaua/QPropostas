@@ -9,6 +9,7 @@ class Propostas_Meta_Box {
     public function __construct() {
         add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
         add_action( 'save_post', array( $this, 'meta_box_save' ) );
+        //$this->settings_page = new SettingsPage();
     }
 
     /**
@@ -36,7 +37,11 @@ class Propostas_Meta_Box {
      */
     public function display_meta_box() {
         global $post;
+        
         $detalhes_proposta = unserialize(get_post_meta($post->ID, 'detalhes_proposta', true));
+        $settings = new SettingsPage();
+        $fields = $settings->get_custom_fields();
+
         include_once( 'views/propostas-navigation.php' );
     }
 
@@ -47,29 +52,16 @@ class Propostas_Meta_Box {
         if( !isset( $_POST['meta_box_nonce'] ) || !wp_verify_nonce( $_POST['meta_box_nonce'], 'detalhes_meta_box_nonce' ) ) return;
 
         if( !current_user_can( 'edit_post' ) ) return;
+        $postdata = $_POST; 
+        $data = array();
 
-        $serialized_data = serialize( array(
-            'nome_proponente'         => sanitize_text_field($_POST['nome_proponente']),
-            'cnpj'                    => sanitize_text_field($_POST['cnpj']),
-            'email'                   => sanitize_email($_POST['email']),
-            'estado'                  => sanitize_text_field($_POST['estado']),
-            'municipio'               => sanitize_text_field($_POST['municipio']),
-            'endereco'                => sanitize_text_field($_POST['endereco']),
-            'telefone'                => sanitize_text_field($_POST['telefone']),
-            'site'                    => sanitize_text_field($_POST['site']),
-            'facebook'                => sanitize_text_field($_POST['facebook']),
-            'twitter'                 => sanitize_text_field($_POST['twitter']),
-            'instagram'               => sanitize_text_field($_POST['instagram']),
-            'responsavel_nome'        => sanitize_text_field($_POST['responsavel_nome']),
-            'responsavel_cpf'         => sanitize_text_field($_POST['responsavel_cpf']),
-            'trabalho_duracao'        => sanitize_text_field($_POST['trabalho_duracao']),
-            'trabalho_ficha_tecnica'  => sanitize_text_field($_POST['trabalho_ficha_tecnica']),
-            'trabalho_pessoas'        => sanitize_text_field($_POST['trabalho_pessoas']),
-            'calendario'              => sanitize_text_field($_POST['calendario']),
-        ));
+        foreach($postdata as $indexItem => $item)
+        {
+            $data[$indexItem] = $item;
 
-        update_post_meta($post_id, 'detalhes_proposta', $serialized_data);
+        }
 
+        update_post_meta($post_id, 'detalhes_proposta', serialize($data));
     }
 
 }
