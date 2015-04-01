@@ -204,6 +204,7 @@ class SettingsPage
      */
     public function add_plugin_page()
     {
+
         // This page will be under "Settings"
         add_options_page(
             'Settings Admin', 

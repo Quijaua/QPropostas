@@ -6,16 +6,21 @@ class Propostas_Admin {
     private $custom_post;
     private $taxonomy;
     private $meta_box;
+    private $settings_page;
 
+    private $db_version;
 
     public function __construct( $name, $version ) {
 
         $this->name = $name;
         $this->version = $version;
+        $this->db_version = '1.0';
 
         $this->custom_post = new Propostas_Custom_Post();
         $this->taxonomy = new Propostas_Taxonomy();
         $this->meta_box = new Propostas_Meta_Box();
+        //if( is_admin() )
+        $this->settings_page = new SettingsPage();
 
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
@@ -56,10 +61,10 @@ class Propostas_Admin {
         wp_enqueue_style( 'proposta', PLUGIN_URL . 'frontend/assets/css/propostas.css' );
 
         wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.1/jquery-ui.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'scrollTo',  '//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.11/jquery.scrollTo.min.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'multidates-picker', PLUGIN_URL . 'frontend/assets/js/multidates-picker/jquery-ui.multidatespicker.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'plugins', PLUGIN_URL . 'frontend/assets/js/plugins.js', array('jquery'), '1.0.0', true );
-        wp_enqueue_script( 'inscreva-se', PLUGIN_URL . 'frontend/assets/js/inscreva_se.js', array('jquery', 'plugins'), '1.0.0', true );
-
+        wp_enqueue_script( 'inscrevase', PLUGIN_URL . 'frontend/assets/js/inscreva_se.js', array('jquery', 'plugins'), '1.0.0', true );
 
     }
     // http://wordpress.stackexchange.com/questions/134451/upload-featured-image-from-front-end-using-wordpress-add-media-button
@@ -69,7 +74,7 @@ class Propostas_Admin {
         {
             if (!wp_verify_nonce($_POST['nonce_form_inscricao'], 'handle_form_inscricao'))
             {
-                die('Submit inválido');
+                die('Submit invÃ¡lido');
             }
             else
             {
@@ -77,15 +82,22 @@ class Propostas_Admin {
                 $postdata = $_POST;
                 $files = $_FILES;
 
-                $titulo = sanitize_text_field($postdata['trabalho_titulo']);
-                $descricao = sanitize_text_field($postdata['trabalho_descricao']);
+                $fields = $this->settings_page->get_custom_fields();
+
+                /*echo '<pre>';
+                print_r($postdata);
+                echo '</pre>';*/
+                //die;
+                // @todo: pegar dinamicamente;
+                $titulo = sanitize_text_field($postdata['titulo']);
+                $descricao = sanitize_text_field($postdata['descricao']);
 
                 $proposta = array(
-                  'post_type'     => 'propostas',
-                  'post_title'    => $titulo,
-                  'post_content'  => $descricao,
-                  'post_status'   => 'draft',
-                  'post_author'   => 1,
+                    'post_type'     => 'propostas',
+                    'post_title'    => $titulo,
+                    'post_content'  => $descricao,
+                    'post_status'   => 'draft',
+                    'post_author'   => 1,
 
                 );
                 $post_id = wp_insert_post( $proposta, $wp_error );
@@ -94,8 +106,18 @@ class Propostas_Admin {
                 {
                     $attachment_id = $this->upload_media($post_id);
 
+                    $data = array();
+
+                    foreach($postdata as $indexItem => $item)
+                    {
+                        $data[$indexItem] = $item;
+
+                    }
+
+                    add_post_meta($post_id, 'detalhes_proposta', serialize($data));
+
                     // Meta
-                    $serialized_data = serialize( array(
+                    /*$serialized_data = serialize( array(
                         'nome_proponente'         => sanitize_text_field($postdata['nome_proponente']),
                         'cnpj'                    => sanitize_text_field($postdata['cnpj']),
                         'email'                   => sanitize_email($postdata['email']),
@@ -113,7 +135,7 @@ class Propostas_Admin {
                         'trabalho_ficha_tecnica'  => sanitize_text_field($postdata['trabalho_ficha_tecnica']),
                         'trabalho_pessoas'        => sanitize_text_field($postdata['trabalho_pessoas']),
                         'calendario'              => sanitize_text_field($postdata['calendario'])
-                    ));
+                    ));*/
 
                     add_post_meta($post_id, 'detalhes_proposta', $serialized_data);
                     $tag = array( (int) $postdata['categorias_apresentacao'] );
@@ -146,165 +168,156 @@ class Propostas_Admin {
     }
     public function inscreva_se_shortcode($atts) {
 
-        $shortcode_atts = shortcode_atts( array(
-            'use_category' => true,
-        ), $atts );
+        $fields = $this->settings_page->get_custom_fields();
+
 
         $html = '<form id="frm-inscricao" method="post" action="" enctype="multipart/form-data">
             <fieldset>';
 
-                $flash_message = get_transient( 'flash_message' );
+        $flash_message = get_transient( 'flash_message' );
 
-                if(false !== $flash_message) {
-                    $html .= '<div class="alert success">'.$flash_message.'</div>';
-                    delete_transient( 'flash_message' );
-                }
+        if(false !== $flash_message) {
+            $html .= '<div class="alert success">'.$flash_message.'</div>';
+            delete_transient( 'flash_message' );
+        }
 
-                $html .= '<label for="nome_proponente">Nome do proponente:
-                    <input name="nome_proponente" type="text" id="nome_proponente" value="" />
-                </label><br />
 
-                <label for="cnpj">CNPJ:
-                    <input name="cnpj" type="text" id="cnpj" value=""/>
-                </label><br />
-
-                <label for="email">E-mail:
-                    <input name="email" type="text" id="email" value="" />
-                </label><br />
-
-                <label for="estado">Estado:
-                    <select name="estado" id="estado">
-                        <option selected="selected" value="">Selecione</option>
-                    </select>
-                </label><br />
-
-                <label for="municipio">Municipio:
-                    <select name="municipio" id="municipio">
-                        <option selected="selected" value="">Selecione</option>
-                    </select>
-                </label><br />
-
-                <label for="endereco">Endereço:
-                    <input name="endereco" type="text" id="endereco" value=""/>
-                </label><br />
-
-                <label for="telefone">Telefone:
-                    <input name="telefone" type="text" id="telefone" value="" />
-                </label><br />
-
-                <label for="site">Site:
-                    <input name="site" type="text" id="site" value="" />
-                </label><br />
-
-                <label for="facebook">Facebook:
-                    <input name="facebook" type="text" id="facebook" value="" />
-                </label><br />
-
-                <label for="twitter">Twitter:
-                    <input name="twitter" type="text" id="twitter" value="" />
-                </label><br />
-
-                <label for="instagram">Instagram:
-                    <input name="instagram" type="text" id="instagram" value="" />
-                </label><br />
-
-                <label for="responsavel_nome">Nome do responsável legal, coordenador(a) ou pessoa de contato do grupo:
-                    <input name="responsavel_nome" type="text" id="responsavel_nome" value=""  class="large-text"  />
-                </label><br />
-
-                <label for="responsavel_cpf">CPF:
-                    <input name="responsavel_cpf" type="text" id="responsavel_cpf" value="" />
-                </label><br />
-
-                <label for="trabalho_titulo">Título:
-                    <input name="trabalho_titulo" type="text" id="trabalho_titulo" value="" />
-                </label><br />
-
-                <label for="trabalho_duracao">Duração:
-                    <input name="trabalho_duracao" type="text" id="trabalho_duracao" value="" />
-                </label><br />
-
-                <label for="trabalho_descricao">Descricão:
-                    <textarea id="trabalho_descricao" name="trabalho_descricao" cols="80" rows="10" ></textarea>
-                </label><br />
-
-                <label for="trabalho_ficha_tecnica">Ficha Técnica:
-                    <textarea id="trabalho_ficha_tecnica" name="trabalho_ficha_tecnica" cols="80" rows="10"></textarea>
-                </label><br />
-
-                <label for="trabalho_foto">Suba uma foto desse trabalho:
-                    <input type="file" id="trabalho_foto" name="trabalho_foto" />
-                </label><br />';
-
-                if("true" == $shortcode_atts["use_category"]) {
-                    $html .= '<label for="categorias_apresentacao">Categorias de apresentacões artísticas:
-                    <select name="categorias_apresentacao" id="categorias_apresentacao">
-                        <option value="">Selecione</option>';
-                    $categorias = get_terms( 'categoria-apresentacao-artistica', array(
-                        'orderby'    => 'count',
-                        'hide_empty' => 0
-                    ) );
-                    foreach($categorias as $categoria) {
-                        $html .= '<option value="'.$categoria->term_id.'">'.$categoria->name.'</option>';
+        foreach($fields as $field)
+        {
+            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] )
+            {
+                $required = '';
+                //var_dump($field['nome'] . '-' .$field['obrigatorio']);
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    if($field['tipo'] === "email")
+                    {
+                        $required .= ' data-rule-email="true" data-msg-email="Digite um email vÃ¡lido"';
                     }
-                    $html .= '</select>
-                </label><br />';
+
+                    $class = '';
+                    if("calendario" == $field['tipo'])
+                    {
+                        $class = 'class="calendario"';
+                    }
+
+                }
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <input '.$class.' name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="" '.$required.'/>
+                        </label><br />';
+
+                if("calendario" == $field['tipo'])
+                {
+                    $html .= '<div id="dialog-confirm" title="Alerta" style="display:none;">
+                                    <p>O dia de domingo Ã© reservado para atividades para o pÃºblico infantil, caso a sua nÃ£o seja, favor escolher outros dias</p>
+                            </div>';
+                }
+            }
+
+            if( "checkbox" == $field['tipo'])
+            {
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
                 }
 
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br>';
+
+                foreach($field['valores'] as $key => $option)
+                {
+                    $html .= '<input name="'.$field['nome'].'" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option;
+                }
+                $html .= '</label><br />';
+            }
+
+            if( "textarea" == $field['tipo'])
+            {
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                }
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <textarea id="'.$field['nome'].'" name="'.$field['nome'].'" cols="80" rows="10" '.$required .'></textarea>
+                        </label><br />';
+
+            }
+
+            if( "file" == $field['tipo'])
+            {
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                }
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                        <input type="file" id="'.$field['nome'].'" name="'.$field['nome'].'" '.$required.'/>
+                     </label><br />';
+            }
+
+            if( "select_estado" == $field['tipo'] OR "select_municipio" == $field['tipo'] )
+            {
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                }
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                    <select '.$required.' name="'.$field['nome'].'" id="'.$field['nome'].'">
+                        <option selected="selected" value="">Selecione</option>
+                    </select>
+                </label><br />';
+            }
 
 
+        }
+        $html .= ' <label for="categorias_apresentacao">Categorias de apresentacÃµes artÃ­sticas:
+                    <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio">
+                        <option value="">Selecione</option>';
+        $categorias = get_terms( 'categoria-apresentacao-artistica', array(
+            'orderby'    => 'count',
+            'hide_empty' => 0
+        ) );
+        foreach($categorias as $categoria) {
+            $html .= '<option value="'.$categoria->term_id.'">'.$categoria->name.'</option>';
+        }
+        $html .= '</select>
+                </label><br />';
+
+
+        $html .= wp_nonce_field("handle_form_inscricao", "nonce_form_inscricao");
         $html .='
-                <label for="trabalho_pessoas">Número de pessoas nessa apresentacão:</br>
-                    <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_1" value="1"  />individual
-                    <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_2" value="2"  />até 2 artistas envolvidos
-                    <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_3" value="3"  />3 a 5 artistas envolvidos
-                    <input name="trabalho_pessoas" type="checkbox" id="trabalho_pessoas_4" value="4"  />6 ou mais artistas envolvidos
-                </label><br />
-
-                <label for="calendario">Calendário:
-
-                <input type="text" id="calendario" name="calendario" value=""/>
-                <label><br />
-                <div id="dialog-confirm" title="Responda" style="display:none;">
-                    <p>É uma apresentacão
-voltada ao público infantil ou de leitura?</p>
-                </div>
-
-                '.wp_nonce_field("handle_form_inscricao", "nonce_form_inscricao").'
                 <input type="submit" value="Enviar" /   >
 
             </fieldset>
         </form>';
 
-
-         return $html;
+        return $html;
 
     }
 
     public function propostas_shortcode($atts) {
-
+        global $post;
         // Buscar propostas publicadas
         $args = array( 'post_type' => 'propostas', 'posts_per_page' => 10, 'post_status' => 'publish');
         $loop = new WP_Query( $args );
         $html = '<ul>';
         while ( $loop->have_posts() ) {
-          $loop->the_post();
-          $permalink = get_the_permalink();
-          $title_attribute = the_title_attribute();
-          $title = get_the_title();
-          $excerpt = get_the_excerpt();
-          $thumbnail = get_the_post_thumbnail( $post_id, 'thumbnail' );
-          $html .= '<li>';
-          $link_post = '<h3><a href="'.$permalink.'" title="'.$title_attribute.'">'.$title.'</a></h3>';
+            $loop->the_post();
+            $permalink = get_the_permalink();
+            $title_attribute = the_title_attribute();
+            $title = get_the_title();
+            $excerpt = get_the_excerpt();
+            $thumbnail = get_the_post_thumbnail( $post->ID, 'thumbnail' );
+            $html .= '<li>';
+            $link_post = '<h3><a href="'.$permalink.'" title="'.$title_attribute.'">'.$title.'</a></h3>';
 
-          if ( has_post_thumbnail() ) {
-            $html .= $thumbnail;
-          }
-          $html .= $link_post;
-          $html .= '<p>';
-          $html .= $excerpt;
-          $html .= '</p>';
-          $html .= '</li>';
+            if ( has_post_thumbnail() ) {
+                $html .= $thumbnail;
+            }
+            $html .= $link_post;
+            $html .= '<p>';
+            $html .= $excerpt;
+            $html .= '</p>';
+            $html .= '</li>';
         }
         $html .= '</ul>';
         //var_dump($html);
@@ -324,5 +337,6 @@ voltada ao público infantil ou de leitura?</p>
         }
         return set_post_thumbnail( $post_id , $attachment_id);
     }
+
 
 }
