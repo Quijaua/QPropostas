@@ -8,7 +8,7 @@
         }
         else
         {
-            $this->update_field($_POST['my_option_name']['nome'], $_POST['my_option_name']);    
+            $this->update_field($_POST['my_option_name']['nome'], $_POST['my_option_name']);
         }
     }
 
@@ -37,12 +37,17 @@
     </tr>
 
     
-    <?php foreach($this->proposals_custom_fields_options as $indexCustomField => $custom_field): 
-    $row_class = $indexCustomField % 2 !== 0 ? 'alternate' : '';
-    $valores = $valores_form = '' ;
+    <?php foreach($this->proposals_custom_fields_options as $indexCustomField => $custom_field):
+
+        if(!empty($custom_field))
+        {
+
+        $row_class = $indexCustomField % 2 !== 0 ? 'alternate' : '';
+        $valores = $valores_form = '' ;
 
     if(!empty($custom_field['valores']))
     {
+
         $valores_form = implode("@", $custom_field['valores']);
         $valores = '<ul>';
         foreach ($custom_field['valores'] as $key => $value) {
@@ -50,7 +55,6 @@
         }
         $valores .= '</ul>';
     }
-
     $obrigatorio = 1 === absint($custom_field['obrigatorio']) ? "Sim" : "Não";
     $visivel = 1 === absint($custom_field['visivel']) ? "Sim" : "Não";
     ?>
@@ -132,7 +136,8 @@
                             <a href="#TB_inline?width=600&height=550&inlineId=my-content-<?php echo $custom_field['nome']; ?>" class="thickbox">Editar</a></td>
         
                         </tr>
-    <?php endforeach; ?>   
+    <?php }
+    endforeach; ?>
 </table>
          
     

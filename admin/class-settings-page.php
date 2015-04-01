@@ -247,10 +247,16 @@ class SettingsPage
         {
             if($field['nome'] === $name)
             {
+                $fieldsContainOptions = array('select', 'radio', 'checkbox');
+               if(in_array($updated_field['tipo'], $fieldsContainOptions))
+               {
+                   $updated_field['valores'] = explode('@', $updated_field['valores']);
+               }
                $this->proposals_custom_fields_options[$key] = $updated_field;
-               $this->update_custom_fields();           
+               $this->update_custom_fields();
                break;
             }
+
         }
     }
 
