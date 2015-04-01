@@ -110,6 +110,7 @@
                                     <option value="file" <?php if($custom_field['tipo'] === "file") echo 'selected="selected"';?>>Imagem destacada</option>
                                     <option value="attachment" <?php if($custom_field['tipo'] === "attachment") echo 'selected="selected"';?>>Anexo</option>
                                     <option value="calendario" <?php if($custom_field['tipo'] === "calendario") echo 'selected="selected"';?>>Calendario</option>
+                                    <option value="date-range" <?php if($custom_field['tipo'] === "date-range") echo 'selected="selected"';?>>Periodo</option>
                                 </select>
                                 </td>
                                 </tr>

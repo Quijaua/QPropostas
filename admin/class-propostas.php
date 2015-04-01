@@ -61,11 +61,16 @@ class Propostas_Admin {
         wp_enqueue_style( 'mdp', PLUGIN_URL . 'frontend/assets/js/multidates-picker/css/mdp.css' );
         wp_enqueue_style( 'prettify', PLUGIN_URL . 'frontend/assets/js/multidates-picker/css/prettify.css' );
         wp_enqueue_style( 'proposta', PLUGIN_URL . 'frontend/assets/css/propostas.css' );
+        wp_enqueue_style( 'bootstrap', PLUGIN_URL . 'frontend/assets/css/bootstrap.css' );
+        wp_enqueue_style( 'datepicker', PLUGIN_URL . 'frontend/assets/css/datepicker.css' );
+
 
         wp_enqueue_script( 'jquery-ui',  '//code.jquery.com/ui/1.11.1/jquery-ui.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'scrollTo',  '//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/1.4.11/jquery.scrollTo.min.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'multidates-picker', PLUGIN_URL . 'frontend/assets/js/multidates-picker/jquery-ui.multidatespicker.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'plugins', PLUGIN_URL . 'frontend/assets/js/plugins.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'bootstrap-datepicker', PLUGIN_URL . 'frontend/assets/js/bootstrap-datepicker.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'bootstrap-datepicker-pt-BR', PLUGIN_URL . 'frontend/assets/js/bootstrap-datepicker.pt-BR.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'inscrevase', PLUGIN_URL . 'frontend/assets/js/inscreva_se.js', array('jquery', 'plugins'), '1.0.0', true );
 
     }
@@ -84,10 +89,9 @@ class Propostas_Admin {
                 $postdata = $_POST;
                 $files = $_FILES;
 
-
                 $fields = $this->settings_page->get_custom_fields();
 
-                $wp_title = $wp_contet = '';
+                $wp_title = $wp_contet = $date_range = '';
                 $files_id = array();
                 if(!empty($fields))
                 {
@@ -106,6 +110,10 @@ class Propostas_Admin {
                         if('wp_content' == $field['tipo'])
                         {
                             $wp_content = $field['nome'];
+                        }
+                        if('date-range' == $field['tipo'])
+                        {
+                            $date_range = $field['nome'];
                         }
 
                         if('file' == $field['tipo'])
@@ -127,6 +135,13 @@ class Propostas_Admin {
                             );
                         }
                     }
+                }
+
+                if(!empty($date_range))
+                {
+                    $postdata[$date_range] = $postdata['start'] . ' - ' . $postdata['end'];
+                    unset($postdata['start']);
+                    unset($postdata['end']);
                 }
 
                 $titulo = sanitize_text_field($postdata[$wp_title]);
@@ -227,6 +242,24 @@ class Propostas_Admin {
                     $html .= '<div id="dialog-confirm" title="Alerta" style="display:none;">
                                     <p>O dia de domingo Ã© reservado para atividades para o pÃºblico infantil, caso a sua nÃ£o seja, favor escolher outros dias</p>
                             </div>';
+                }
+
+
+            }
+
+            if("date-range" == $field['tipo'])
+            {
+                if(absint($field['obrigatorio']) === 1 )
+                {
+                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <div class="input-daterange" id="datepicker" >
+                    <input type="text" class="input-small" name="start" />
+                    <span class="add-on" style="vertical-align: top;height:20px"> a </span>
+                    <input type="text" class="input-small" name="end" />
+                </div>
+                        </label><br />';
+
                 }
             }
 

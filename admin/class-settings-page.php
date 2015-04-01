@@ -377,7 +377,7 @@ class SettingsPage
 
         if( isset( $input['tipo'] ) )
         {
-            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file', 'attachment')))
+            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file', 'attachment', 'date-range')))
             {
                 $sanitized_input['tipo'] = $input['tipo'];
             }
@@ -463,6 +463,7 @@ class SettingsPage
                 <option value="file">Imagem destacada</option>
                 <option value="attachment">Anexo</option>
                 <option value="calendario">Calendario</option>
+                <option value="date-range">Periodo</option>
             </select>
             '
         );

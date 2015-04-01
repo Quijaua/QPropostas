@@ -7,7 +7,7 @@
 
         <?php foreach($fields as $field):
 
-            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] OR "attachment" == $field['tipo'] )
+            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] OR "attachment" == $field['tipo'] OR "date-range" == $field['tipo'] )
                     {
                         $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                             <input  name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="'.esc_attr($detalhes_proposta[$field['nome']]).'"  class="large-text"/>

@@ -22,11 +22,12 @@ jQuery(function($){
         $.datepicker.setDefaults($.datepicker.regional['pt-BR']);
 });
 (function($){
-    // http://fullcalendar.io/
-    new dgCidadesEstados({
-          cidade: document.getElementById('municipio'),
-          estado: document.getElementById('estado')
-    });
+    $('.input-daterange').datepicker({
+                    todayBtn: "linked",
+                    format : "dd/mm/yyyy",
+                    language: "pt-BR"
+                });
+
 
     var
         $cnpj = $('#cnpj')
@@ -54,17 +55,17 @@ jQuery(function($){
     $frmInscricao.validate({
         focusInvalid: false,
         invalidHandler: function(form, validator) {
-            
+
             if (!validator.numberOfInvalids())
                 return;
-            
+
             $('html, body').animate({
                 scrollTop: $(validator.errorList[0].element).offset().top
             }, 1000);
-            
-        }    
+
+        }
     });
-        
+
         var today = new Date();
         var date = new Date(2015, 1, 9, 0, 0, 0, 0);
         //var y = today.getFullYear() + 1;
@@ -163,6 +164,12 @@ jQuery(function($){
                 new Date(2015, 3, 29, 0, 0, 0, 0),
                 new Date(2015, 3, 30, 0, 0, 0, 0),
             ]
+        });
+
+        // http://fullcalendar.io/
+        new dgCidadesEstados({
+              cidade: document.getElementById('municipio'),
+              estado: document.getElementById('estado')
         });
 
 })(jQuery);
