@@ -377,7 +377,7 @@ class SettingsPage
 
         if( isset( $input['tipo'] ) )
         {
-            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file')))
+            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file', 'attachment')))
             {
                 $sanitized_input['tipo'] = $input['tipo'];
             }
@@ -460,7 +460,8 @@ class SettingsPage
                 <option value="select">Select</option>
                 <option value="select_estado">Select Estado</option>
                 <option value="select_municipio">Select Munícipio</option>
-                <option value="file">Arquivo</option>
+                <option value="file">Imagem destacada</option>
+                <option value="attachment">Anexo</option>
                 <option value="calendario">Calendario</option>
             </select>
             '

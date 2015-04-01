@@ -107,7 +107,8 @@
                                     <option value="select" <?php if($custom_field['tipo'] === "select") echo 'selected="selected"';?>>Select</option>
                                     <option value="select_estado" <?php if($custom_field['tipo'] === "select_estado") echo 'selected="selected"';?>>Select Estado</option>
                                     <option value="select_municipio" <?php if($custom_field['tipo'] === "select_municipio") echo 'selected="selected"';?>>Select Munícipio</option>
-                                    <option value="file" <?php if($custom_field['tipo'] === "file") echo 'selected="selected"';?>>Arquivo</option>
+                                    <option value="file" <?php if($custom_field['tipo'] === "file") echo 'selected="selected"';?>>Imagem destacada</option>
+                                    <option value="attachment" <?php if($custom_field['tipo'] === "attachment") echo 'selected="selected"';?>>Anexo</option>
                                     <option value="calendario" <?php if($custom_field['tipo'] === "calendario") echo 'selected="selected"';?>>Calendario</option>
                                 </select>
                                 </td>

@@ -12,7 +12,7 @@
 					 $content = get_the_content();
 					 $image = get_the_post_thumbnail( $post->ID, 'full' );
 					 $post_id = $post->ID;
-					
+
 
 					$detalhes_proposta = unserialize(get_post_meta($post_id, 'detalhes_proposta', true));
 
@@ -23,13 +23,17 @@
 
 					 $settings = new SettingsPage();
 					 $fields = $settings->get_custom_fields();
-					 
+
 					 echo '<p>';
 					 foreach ($fields as $field) {
 
-					 	if(1 === absint($field['visivel']) && "file" !== $field['tipo'] )
+					 	if(1 === absint($field['visivel']) && !in_array($field['tipo'],array('file', 'attachment')))
 					 	{
 					 		echo '<strong>'.$field['label'].':</strong> '.$detalhes_proposta[$field['nome']].'<br />';
+					 	}
+					 	if(1 === absint($field['visivel']) && in_array($field['tipo'],array('attachment')))
+					 	{
+					 		echo '<strong>'.$field['label'].':</strong><a href="'.$detalhes_proposta[$field['nome']].'"><i class="fa fa-file-pdf-o></i><a><br />';
 					 	}
 					 	# code...
 					 }

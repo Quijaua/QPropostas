@@ -56,6 +56,8 @@ class Propostas_Admin {
 
     public function enqueue_front_scripts() {
         wp_enqueue_style( 'jqueryui-theme', '//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css' );
+        wp_enqueue_style( 'font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' );
+
         wp_enqueue_style( 'mdp', PLUGIN_URL . 'frontend/assets/js/multidates-picker/css/mdp.css' );
         wp_enqueue_style( 'prettify', PLUGIN_URL . 'frontend/assets/js/multidates-picker/css/prettify.css' );
         wp_enqueue_style( 'proposta', PLUGIN_URL . 'frontend/assets/css/propostas.css' );
@@ -82,9 +84,11 @@ class Propostas_Admin {
                 $postdata = $_POST;
                 $files = $_FILES;
 
+
                 $fields = $this->settings_page->get_custom_fields();
 
                 $wp_title = $wp_contet = '';
+                $files_id = array();
                 if(!empty($fields))
                 {
                     foreach($fields as $indexField => $field)
@@ -98,10 +102,33 @@ class Propostas_Admin {
                         {
                             $wp_content = $field['nome'];
                         }
+
+                        if('wp_content' == $field['tipo'])
+                        {
+                            $wp_content = $field['nome'];
+                        }
+
+                        if('file' == $field['tipo'])
+                        {
+                            $files_id[] = array(
+                                'name' => $field['nome'],
+                                'is_featured_image' => true,
+
+                            );
+
+                        }
+
+                        if('attachment' == $field['tipo'])
+                        {
+                            $files_id[] = array(
+                                'name' => $field['nome'],
+                                'is_featured_image' => false,
+
+                            );
+                        }
                     }
                 }
 
-                // @todo: pegar dinamicamente;
                 $titulo = sanitize_text_field($postdata[$wp_title]);
                 $descricao = sanitize_text_field($postdata[$wp_content]);
 
@@ -118,9 +145,18 @@ class Propostas_Admin {
 
                 if(false !== $post_id)
                 {
-                    $attachment_id = $this->upload_media($post_id);
 
-                    $data = array();
+                    if( !empty($files_id))
+                    {
+                        foreach($files_id as $file_id)
+                        {
+                            $attachment_id = $this->upload_media($post_id, $file_id['name'], $files_id['is_featured_image']);
+                        }
+
+                    }
+
+
+                    $data = unserialize(get_post_meta($post_id, 'detalhes_proposta', true));
 
                     foreach($postdata as $indexItem => $item)
                     {
@@ -128,7 +164,7 @@ class Propostas_Admin {
 
                     }
 
-                    add_post_meta($post_id, 'detalhes_proposta', serialize($data));
+                    update_post_meta($post_id, 'detalhes_proposta', serialize($data));
 
                     if(isset($postdata['categorias_apresentacao']))
                     {
@@ -222,7 +258,7 @@ class Propostas_Admin {
 
             }
 
-            if( "file" == $field['tipo'])
+            if( "file" == $field['tipo'] OR "attachment" == $field['tipo'])
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
@@ -303,22 +339,63 @@ class Propostas_Admin {
             $html .= '</li>';
         }
         $html .= '</ul>';
-        //var_dump($html);
         return $html;
     }
 
 
-    private function upload_media($post_id) {
+    private function upload_media($post_id, $file_id, $is_featured_image = true) {
 
         require_once( ABSPATH . 'wp-admin/includes/image.php' );
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
         require_once( ABSPATH . 'wp-admin/includes/media.php' );
-        $attachment_id = media_handle_upload( 'trabalho_foto', (int)$post_id) ;
 
-        if ( is_wp_error( $attachment_id ) ) {
-            return false;
+
+        if($is_featured_image)
+        {
+            $attachment_id = media_handle_upload( $file_id, (int)$post_id) ;
+
+            if ( is_wp_error( $attachment_id ) ) {
+                return false;
+            }
+            return set_post_thumbnail( $post_id , $attachment_id);
         }
-        return set_post_thumbnail( $post_id , $attachment_id);
+
+        if( !$is_featured_image)
+        {
+
+            // Make sure the file array isn't empty
+    if(!empty($_FILES[$file_id]['name'])) {
+
+        // Setup the array of supported file types. In this case, it's just PDF.
+        $supported_types = array('application/pdf');
+
+        // Get the file type of the upload
+        $arr_file_type = wp_check_filetype(basename($_FILES[$file_id]['name']));
+        $uploaded_type = $arr_file_type['type'];
+
+        // Check if the type is supported. If not, throw an error.
+        if(in_array($uploaded_type, $supported_types)) {
+
+            // Use the WordPress API to upload the file
+            $upload = wp_upload_bits($_FILES[$file_id]['name'], null, file_get_contents($_FILES[$file_id]['tmp_name']));
+
+            if(isset($upload['error']) && $upload['error'] != 0) {
+                wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+            } else {
+
+
+                $metadata[$file_id] = $upload['url'];
+                add_post_meta($post_id, 'detalhes_proposta', serialize($metadata));
+                update_post_meta($post_id, 'detalhes_proposta', serialize($metadata));
+            } // end if/else
+
+        } else {
+            wp_die("The file type that you've uploaded is not a PDF.");
+        } // end if/else
+
+    } // end if
+        }
+
     }
 
 
