@@ -377,7 +377,7 @@ class SettingsPage
 
         if( isset( $input['tipo'] ) )
         {
-            if( in_array($input['tipo'], array('text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file')))
+            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file')))
             {
                 $sanitized_input['tipo'] = $input['tipo'];
             }
@@ -451,6 +451,8 @@ class SettingsPage
         printf(
             '<select name="my_option_name[tipo]" id="tipo" required>
                 <option value="text">Texto</option>
+                <option value="wp_title">Titulo WordPress</option>
+                <option value="wp_content">Conteudo WordPress</option>
                 <option value="email">E-mail</option>
                 <option value="checkbox">Checkbox</option>
                 <option value="textarea">Textarea</option>

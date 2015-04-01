@@ -97,6 +97,8 @@
                                 <tr>
                                     <th scope="row">Tipo</th>
                                     <td><select name="my_option_name[tipo]" id="tipo" required="">
+                                    <option value="wp_title" <?php if($custom_field['tipo'] === "wp_title") echo 'selected="selected"';?>>Texto</option>
+                                    <option value="wp_content" <?php if($custom_field['tipo'] === "wp_content") echo 'selected="selected"';?>>Texto</option>
                                     <option value="text" <?php if($custom_field['tipo'] === "text") echo 'selected="selected"';?>>Texto</option>
                                     <option value="email" <?php if($custom_field['tipo'] === "email") echo 'selected="selected"';?>>E-mail</option>
                                     <option value="checkbox" <?php if($custom_field['tipo'] === "checkbox") echo 'selected="selected"';?>>Checkbox</option>

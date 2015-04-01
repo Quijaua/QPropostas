@@ -84,13 +84,26 @@ class Propostas_Admin {
 
                 $fields = $this->settings_page->get_custom_fields();
 
-                /*echo '<pre>';
-                print_r($postdata);
-                echo '</pre>';*/
-                //die;
+                $wp_title = $wp_contet = '';
+                if(!empty($fields))
+                {
+                    foreach($fields as $indexField => $field)
+                    {
+                        if('wp_title' == $field['tipo'])
+                        {
+                            $wp_title = $field['nome'];
+                        }
+
+                        if('wp_content' == $field['tipo'])
+                        {
+                            $wp_content = $field['nome'];
+                        }
+                    }
+                }
+
                 // @todo: pegar dinamicamente;
-                $titulo = sanitize_text_field($postdata['titulo']);
-                $descricao = sanitize_text_field($postdata['descricao']);
+                $titulo = sanitize_text_field($postdata[$wp_title]);
+                $descricao = sanitize_text_field($postdata[$wp_content]);
 
                 $proposta = array(
                     'post_type'     => 'propostas',
@@ -100,7 +113,8 @@ class Propostas_Admin {
                     'post_author'   => 1,
 
                 );
-                $post_id = wp_insert_post( $proposta, $wp_error );
+                $post_id = wp_insert_post( $proposta );
+
 
                 if(false !== $post_id)
                 {
@@ -116,57 +130,22 @@ class Propostas_Admin {
 
                     add_post_meta($post_id, 'detalhes_proposta', serialize($data));
 
-                    // Meta
-                    /*$serialized_data = serialize( array(
-                        'nome_proponente'         => sanitize_text_field($postdata['nome_proponente']),
-                        'cnpj'                    => sanitize_text_field($postdata['cnpj']),
-                        'email'                   => sanitize_email($postdata['email']),
-                        'estado'                  => sanitize_text_field($postdata['estado']),
-                        'municipio'               => sanitize_text_field($postdata['municipio']),
-                        'endereco'                => sanitize_text_field($postdata['endereco']),
-                        'telefone'                => sanitize_text_field($postdata['telefone']),
-                        'site'                    => sanitize_text_field($postdata['site']),
-                        'facebook'                => sanitize_text_field($postdata['facebook']),
-                        'twitter'                 => sanitize_text_field($postdata['twitter']),
-                        'instagram'               => sanitize_text_field($postdata['instagram']),
-                        'responsavel_nome'        => sanitize_text_field($postdata['responsavel_nome']),
-                        'responsavel_cpf'         => sanitize_text_field($postdata['responsavel_cpf']),
-                        'trabalho_duracao'        => sanitize_text_field($postdata['trabalho_duracao']),
-                        'trabalho_ficha_tecnica'  => sanitize_text_field($postdata['trabalho_ficha_tecnica']),
-                        'trabalho_pessoas'        => sanitize_text_field($postdata['trabalho_pessoas']),
-                        'calendario'              => sanitize_text_field($postdata['calendario'])
-                    ));*/
-
-                    add_post_meta($post_id, 'detalhes_proposta', $serialized_data);
-                    $tag = array( (int) $postdata['categorias_apresentacao'] );
-                    wp_set_post_terms( $post_id, $tag, 'categoria-apresentacao-artistica' );
+                    if(isset($postdata['categorias_apresentacao']))
+                    {
+                        $tag = array( (int) $postdata['categorias_apresentacao'] );
+                        wp_set_post_terms( $post_id, $tag, 'categoria-apresentacao-artistica' );
+                    }
                     set_transient( 'flash_message', 'Proposta enviada com sucesso!');
                 }
-
-                // @todo: Tratamento de erros.
-
-                /*echo '<pre>';
-                print_r($postdata);
-                echo '</pre>';
-                echo '<pre>';
-                print_r($files);
-                echo '</pre>';
-                die;
-                if (empty($_POST['nome_proponente']))
-                {
-                    $error = new WP_Error('empty_error', __('Please enter name.', 'tahiryasin'));
-                    wp_die($error->get_error_message(), __('CustomForm Error', 'tahiryasin'));
-                }
-                else
-                {
-                    die('Its safe to do further processing on submitted data.');
-                }*/
-
 
             }
         }
     }
     public function inscreva_se_shortcode($atts) {
+
+        $shortcode_atts = shortcode_atts( array(
+            'use_category' => true,
+        ), $atts );
 
         $fields = $this->settings_page->get_custom_fields();
 
@@ -184,7 +163,7 @@ class Propostas_Admin {
 
         foreach($fields as $field)
         {
-            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] )
+            if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] OR "wp_title" == $field['tipo'] )
             {
                 $required = '';
                 //var_dump($field['nome'] . '-' .$field['obrigatorio']);
@@ -231,7 +210,7 @@ class Propostas_Admin {
                 $html .= '</label><br />';
             }
 
-            if( "textarea" == $field['tipo'])
+            if( "textarea" == $field['tipo'] OR "wp_content" == $field['tipo'])
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
@@ -272,6 +251,9 @@ class Propostas_Admin {
         $html .= ' <label for="categorias_apresentacao">Categorias de apresentacÃµes artÃ­sticas:
                     <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio">
                         <option value="">Selecione</option>';
+
+
+         if("true" == $shortcode_atts["use_category"]) {
         $categorias = get_terms( 'categoria-apresentacao-artistica', array(
             'orderby'    => 'count',
             'hide_empty' => 0
@@ -282,6 +264,7 @@ class Propostas_Admin {
         $html .= '</select>
                 </label><br />';
 
+            }
 
         $html .= wp_nonce_field("handle_form_inscricao", "nonce_form_inscricao");
         $html .='
