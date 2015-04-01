@@ -1,7 +1,13 @@
 <?php add_thickbox(); ?>
-<?php 
+<?php
     if("POST" === $_SERVER['REQUEST_METHOD'])
     {
+
+        if(isset($_POST['reset']))
+        {
+            $this->reset();
+        }
+
         if(isset($_POST['delete']))
         {
             $this->delete_field($_POST['my_option_name']['nome']);
@@ -17,14 +23,17 @@
     <form method="post" action="options.php">
         <?php
             // This prints out all hidden setting fields
-            settings_fields( 'my_option_group' );   
+            settings_fields( 'my_option_group' );
             do_settings_sections( 'campos-gerenciaveis' );
-            submit_button(); 
+            submit_button();
         ?>
     </form>
     <?php screen_icon(); ?>
-    
-    <h2>Campos Gerenciáveis</h2>  
+
+    <h2>Campos Gerenciáveis</h2>
+    <form method="post" action="">
+        <input type="submit" name="reset" id="reset" class="button button-primary" value="Reset" style="background-color:#ff0000;">
+    </form>
     <table class="form-table">
     <tr>
         <th class="row-title">Nome</th>
@@ -33,10 +42,10 @@
         <th>Valores</th>
         <th>Exibir</th>
         <th>Ações</th>
-        
+
     </tr>
 
-    
+
     <?php foreach($this->proposals_custom_fields_options as $indexCustomField => $custom_field):
 
         if(!empty($custom_field))
@@ -58,7 +67,7 @@
     $obrigatorio = 1 === absint($custom_field['obrigatorio']) ? "Sim" : "Não";
     $visivel = 1 === absint($custom_field['visivel']) ? "Sim" : "Não";
     ?>
-    
+
     <tr valign="top" class="<?php echo $row_class; ?>">
         <td scope="row"><label for="tablecell"><?php echo $custom_field['label']; ?></label></td>
         <td><?php echo $obrigatorio; ?></td>
@@ -127,18 +136,18 @@
                         </table>
                         <p class="submit">
                             <input type="submit" name="submit" id="submit" class="button button-primary" value="Salvar alterações">
-                            <input type="submit" name="delete" id="delete" class="button button-primary" value="Excluir" style="background-color:#ff0000;">    
-                        </p>            
-                    </form> 
+                            <input type="submit" name="delete" id="delete" class="button button-primary" value="Excluir" style="background-color:#ff0000;">
+                        </p>
+                    </form>
 
                                  </p>
                             </div>
                             <a href="#TB_inline?width=600&height=550&inlineId=my-content-<?php echo $custom_field['nome']; ?>" class="thickbox">Editar</a></td>
-        
+
                         </tr>
     <?php }
     endforeach; ?>
 </table>
-         
-    
+
+
 </div>
