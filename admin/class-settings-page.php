@@ -376,7 +376,7 @@ class SettingsPage
             $sanitized_input['valores'] = '';
             if(!empty($input['valores']))
             {
-                $sanitized_input['valores'] = explode(",", $input['valores']);    
+                $sanitized_input['valores'] = explode("@", $input['valores']);
             }
             
 
@@ -465,7 +465,7 @@ class SettingsPage
     public function opcoes_callback()
     {
         printf(
-            '<input type="text" id="valores" name="my_option_name[valores]" value="%s" class="large-text"/><small> Digite os valores separados por virgula</small>',
+            '<input type="text" id="valores" name="my_option_name[valores]" value="%s" class="large-text"/><small> Digite os valores separados por @</small>',
             isset( $this->options['valores'] ) ? esc_attr( $this->options['valores']) : ''
         );
     }

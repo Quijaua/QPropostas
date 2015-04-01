@@ -43,7 +43,7 @@
 
     if(!empty($custom_field['valores']))
     {
-        $valores_form = implode(",", $custom_field['valores']);
+        $valores_form = implode("@", $custom_field['valores']);
         $valores = '<ul>';
         foreach ($custom_field['valores'] as $key => $value) {
             $valores .=  '<li>'. $value. '</li>' ;
@@ -102,7 +102,7 @@
                                     <td>
                                         <input type="text" id="valores" name="my_option_name[valores]" value="<?php echo $valores_form; ?>" class="large-text">
 
-                                        <small> Digite os valores separados por virgula</small>
+                                        <small> Digite os valores separados por @</small>
                                     </td>
                                 </tr>
                                 <tr>
