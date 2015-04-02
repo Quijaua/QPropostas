@@ -400,7 +400,12 @@ class Propostas_Admin {
     if(!empty($_FILES[$file_id]['name'])) {
 
         // Setup the array of supported file types. In this case, it's just PDF.
-        $supported_types = array('application/pdf');
+        $supported_types = array('application/pdf',
+                                'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'application/vnd.ms-excel',
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
 
         // Get the file type of the upload
         $arr_file_type = wp_check_filetype(basename($_FILES[$file_id]['name']));

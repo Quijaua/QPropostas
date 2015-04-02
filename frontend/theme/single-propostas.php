@@ -33,7 +33,19 @@
 					 	}
 					 	if(1 === absint($field['visivel']) && in_array($field['tipo'],array('attachment')))
 					 	{
-					 		echo '<strong>'.$field['label'].':</strong><a href="'.$detalhes_proposta[$field['nome']].'"><i class="fa fa-file-pdf-o></i><a><br />';
+					 		$urlStriped = explode(".", $detalhes_proposta[$field['nome']);
+					 		$extension = array_pop($urlStriped);
+
+					 		$faIconMap = array(
+					 			'pdf' => 'fa-file-pdf-o',
+					 			'doc' => 'fa-file-word-o',
+					 			'docx'=> 'fa-file-word-o',
+					 			'xls' => 'fa-file-excel-o',
+					 			'xlsx'=> 'fa-file-excel-o'
+					 		);
+
+
+					 		echo '<strong>'.$field['label'].':</strong><a href="'.$detalhes_proposta[$field['nome']].'"><i class="fa '.$faIconMap[$extension].'></i><a><br />';
 					 	}
 					 	# code...
 					 }
