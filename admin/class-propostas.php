@@ -168,11 +168,12 @@ class Propostas_Admin {
                 if(false !== $post_id)
                 {
 
+                    
                     if( !empty($files_id))
                     {
                         foreach($files_id as $file_id)
                         {
-                            $attachment_id = $this->upload_media($post_id, $file_id['name'], $files_id['is_featured_image']);
+                            $attachment_id = $this->upload_media($post_id, $file_id['name'], $file_id['is_featured_image']);
                         }
 
                     }
@@ -324,12 +325,13 @@ class Propostas_Admin {
 
 
         }
+        if("true" == $shortcode_atts["use_category"]) {
         $html .= ' <label for="categorias_apresentacao">Categorias de apresentacÃµes artÃ­sticas:
                     <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio">
                         <option value="">Selecione</option>';
 
 
-         if("true" == $shortcode_atts["use_category"]) {
+         
         $categorias = get_terms( 'categoria-apresentacao-artistica', array(
             'orderby'    => 'count',
             'hide_empty' => 0
@@ -389,7 +391,7 @@ class Propostas_Admin {
         require_once( ABSPATH . 'wp-admin/includes/file.php' );
         require_once( ABSPATH . 'wp-admin/includes/media.php' );
 
-
+        
         if($is_featured_image)
         {
             $attachment_id = media_handle_upload( $file_id, (int)$post_id) ;
