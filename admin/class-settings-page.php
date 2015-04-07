@@ -23,6 +23,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -32,6 +33,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -41,6 +43,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'email',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -50,6 +53,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'select_estado',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -59,6 +63,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'select_municipio',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -68,6 +73,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -77,6 +83,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -86,6 +93,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -95,6 +103,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -104,6 +113,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -113,6 +123,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -122,6 +133,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
              array(
@@ -131,6 +143,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
              array(
                 'label'       => 'Título',
@@ -139,6 +152,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
              array(
@@ -148,6 +162,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'text',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
               array(
@@ -157,6 +172,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'textarea',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
              array(
@@ -166,6 +182,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'textarea',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
              array(
@@ -175,6 +192,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'checkbox',
                 'valores'     => array('Individual', 'até 2 artistas envolvidos', '3 a 5 artistas envolvidos', '6 ou mais artistas envolvidos '),
+                'texto_complementar'     => '',
             ),
 
             array(
@@ -184,6 +202,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'calendario',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
              array(
@@ -193,6 +212,7 @@ class SettingsPage
                 'visivel'     => 1,
                 'tipo'        => 'file',
                 'valores'     => '',
+                'texto_complementar'     => '',
             ),
 
 

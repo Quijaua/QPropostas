@@ -186,7 +186,7 @@ class Propostas_Admin {
                         $data[$indexItem] = $item;
 
                     }
-
+                   
                     update_post_meta($post_id, 'detalhes_proposta', serialize($data));
 
                     if(isset($postdata['categorias_apresentacao']))
@@ -228,7 +228,7 @@ class Propostas_Admin {
                 //var_dump($field['nome'] . '-' .$field['obrigatorio']);
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                     if($field['tipo'] === "email")
                     {
                         $required .= ' data-rule-email="true" data-msg-email="Digite um email vÃ¡lido"';
@@ -259,7 +259,7 @@ class Propostas_Admin {
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                     $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                             <div class="input-daterange" id="datepicker" >
                     <input type="text" class="input-small" name="start" />
@@ -271,27 +271,35 @@ class Propostas_Admin {
                 }
             }
 
-            if( "checkbox" == $field['tipo'])
+            if( "checkbox" == $field['tipo'] OR "checkbox_with_text" == $field['tipo'])
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                 }
 
                 $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br><ul>';
 
                 foreach($field['valores'] as $key => $option)
                 {
-                    $html .= '<li><input name="'.$field['nome'].'" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option. '</li>';
+                    $html .= '<li><input name="'.$field['nome'].'[]" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option. '</li>';
+
+
                 }
-                $html .= '</ul></label><br />';
+                $html .= '</ul>';
+                if("checkbox_with_text" === $field['tipo']) {
+                        $html .= '<label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
+                        $html .= '<input type="text" name="'.$field['nome'].'[]">';                      
+                }
+
+                $html .='</label><br />';
             }
 
             if( "textarea" == $field['tipo'] OR "wp_content" == $field['tipo'])
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                 }
                 $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                             <textarea id="'.$field['nome'].'" name="'.$field['nome'].'" cols="80" rows="10" '.$required .'></textarea>
@@ -303,7 +311,7 @@ class Propostas_Admin {
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                 }
                 $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                         <input type="file" id="'.$field['nome'].'" name="'.$field['nome'].'" '.$required.'/>
@@ -314,7 +322,7 @@ class Propostas_Admin {
             {
                 if(absint($field['obrigatorio']) === 1 )
                 {
-                    $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
+                    $required = 'data-rule-required="true" data-msg-required="Campo Obrigatório"';
                 }
                 $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                     <select '.$required.' name="'.$field['nome'].'" id="'.$field['nome'].'">
@@ -327,7 +335,7 @@ class Propostas_Admin {
         }
         if("true" == $shortcode_atts["use_category"]) {
         $html .= ' <label for="categorias_apresentacao">Categoria:
-                    <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio">
+                    <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo Obrigatório">
                         <option value="">Selecione</option>';
 
 

@@ -5,7 +5,8 @@
 
         ?>
 
-        <?php foreach($fields as $field):
+        <?php 
+        foreach($fields as $field):
 
             if( "text" == $field['tipo'] OR "calendario" == $field['tipo'] OR "email" == $field['tipo'] OR "attachment" == $field['tipo'] OR "date-range" == $field['tipo'] )
                     {
@@ -13,12 +14,13 @@
                             <input  name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="'.esc_attr($detalhes_proposta[$field['nome']]).'"  class="large-text"/>
                         </label><br />';
 
-                        /*if("calendario" == $field['tipo'])
-                        {
-                            $html .= '<div id="dialog-confirm" title="Alerta" style="display:none;">
-                                    <p>O dia de domingo é reservado para atividades para o público infantil, caso a sua não seja, favor escolher outros dias</p>
-                            </div>';
-                        }*/
+                    }
+
+                    if( "checkbox_with_text" == $field['tipo'])
+                    {
+                      $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
+                            <input  name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="'.esc_attr(implode(',', $detalhes_proposta[$field['nome']])).'"  class="large-text"/>
+                        </label><br />';      
                     }
 
                     if( "checkbox" == $field['tipo'])
