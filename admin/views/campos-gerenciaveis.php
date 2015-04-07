@@ -30,7 +30,7 @@
     </form>
     <?php screen_icon(); ?>
 
-    <h2>Campos Gerenciáveis</h2>
+    <h2>QPropostas</h2>
     <form method="post" action="">
         <input type="submit" name="reset" id="reset" class="button button-primary" value="Reset" style="background-color:#ff0000;">
     </form>

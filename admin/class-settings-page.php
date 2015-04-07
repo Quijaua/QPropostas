@@ -208,7 +208,7 @@ class SettingsPage
         // This page will be under "Settings"
         add_options_page(
             'Settings Admin',
-            'Campos Gerenciáveis',
+            'QPropostas',
             'manage_options',
             'campos-gerenciaveis',
             array( $this, 'create_admin_page' )
