@@ -326,7 +326,7 @@ class Propostas_Admin {
 
         }
         if("true" == $shortcode_atts["use_category"]) {
-        $html .= ' <label for="categorias_apresentacao">Categorias de apresentacÃµes artÃ­sticas:
+        $html .= ' <label for="categorias_apresentacao">Categoria:
                     <select name="categorias_apresentacao" id="categorias_apresentacao" data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio">
                         <option value="">Selecione</option>';
 
@@ -495,19 +495,6 @@ class Propostas_Admin {
 
                 switch($action) {
                     case 'export':
-
-                        // if we set up user permissions/capabilities, the code might look like:
-                        //if ( !current_user_can($post_type_object->cap->export_post, $post_id) )
-                        //  wp_die( __('You are not allowed to export this post.') );
-
-                        /*$exported = 0;
-                        foreach( $post_ids as $post_id ) {
-
-                            if ( !$this->perform_export($post_id) )
-                                wp_die( __('Error exporting post.') );
-
-                            $exported++;
-                        }*/
                         $exported = count($post_ids);
                         if ( !$this->perform_export($post_ids) )
                                 wp_die( __('Error exporting post.') );
@@ -553,6 +540,9 @@ class Propostas_Admin {
 
 
                     $detalhes_proposta = unserialize(get_post_meta($post->ID, 'detalhes_proposta', true));
+                    $terms = wp_get_post_terms($post->ID, 'categoria-apresentacao-artistica');
+                   
+
                     $settings = new SettingsPage();
                     $fields = $settings->get_custom_fields();
 
@@ -569,6 +559,7 @@ class Propostas_Admin {
                         'excerpt'   => $excerpt,
                         'thumbnail' => $thumbnail,
                         'permalink' => $permalink,
+                        'category'  => isset($terms[0]->name) ? $terms[0]->name : ''
                     );
 
                     $proposals[] = array_merge($postInfo, $postMeta);
@@ -578,7 +569,7 @@ class Propostas_Admin {
             }
             /* Restore original Post Data */
             wp_reset_postdata();
-
+            
             // output headers so that the file is downloaded rather than displayed
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename=propostas'.time().'.csv');
