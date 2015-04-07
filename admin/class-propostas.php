@@ -278,13 +278,13 @@ class Propostas_Admin {
                     $required = 'data-rule-required="true" data-msg-required="Campo ObrigatÃ³rio"';
                 }
 
-                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br>';
+                $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br><ul>';
 
                 foreach($field['valores'] as $key => $option)
                 {
-                    $html .= '<input name="'.$field['nome'].'" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option;
+                    $html .= '<li><input name="'.$field['nome'].'" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option. '</li>';
                 }
-                $html .= '</label><br />';
+                $html .= '</ul></label><br />';
             }
 
             if( "textarea" == $field['tipo'] OR "wp_content" == $field['tipo'])
