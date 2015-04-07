@@ -553,6 +553,9 @@ class Propostas_Admin {
 
 
                     $detalhes_proposta = unserialize(get_post_meta($post->ID, 'detalhes_proposta', true));
+                    $terms = wp_get_post_terms($post->ID, 'categoria-apresentacao-artistica');
+                   
+
                     $settings = new SettingsPage();
                     $fields = $settings->get_custom_fields();
 
@@ -569,6 +572,7 @@ class Propostas_Admin {
                         'excerpt'   => $excerpt,
                         'thumbnail' => $thumbnail,
                         'permalink' => $permalink,
+                        'category'  => isset($terms[0]->name) ? $terms[0]->name : ''
                     );
 
                     $proposals[] = array_merge($postInfo, $postMeta);
@@ -578,7 +582,7 @@ class Propostas_Admin {
             }
             /* Restore original Post Data */
             wp_reset_postdata();
-
+            
             // output headers so that the file is downloaded rather than displayed
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename=propostas'.time().'.csv');
