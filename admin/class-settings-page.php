@@ -200,12 +200,12 @@ class SettingsPage
     }
 
     /**
-     * Add options page
-     */
+    * Adiciona página de configuração do plugin
+    * em Settings > QPropostas
+    */
     public function add_plugin_page()
     {
 
-        // This page will be under "Settings"
         add_options_page(
             'Settings Admin',
             'QPropostas',
@@ -227,7 +227,7 @@ class SettingsPage
     }
     public function get_custom_fields()
     {
-        //delete_option('proposals_custom_fields');
+        
         $this->options = get_option( 'proposals_custom_fields' );
 
 
@@ -302,14 +302,6 @@ class SettingsPage
             'campos-gerenciaveis' // Page
         );
 
-        /*add_settings_field(
-            'id_number', // ID
-            'ID Number', // Title
-            array( $this, 'id_number_callback' ), // Callback
-            'campos-gerenciaveis', // Page
-            'setting_section_id' // Section
-        );*/
-
         add_settings_field(
             'label',
             'Nome',
@@ -325,6 +317,15 @@ class SettingsPage
             'campos-gerenciaveis',
             'setting_section_id'
         );
+
+        add_settings_field(
+            'texto_complementar',
+            'Texto para outras opções',
+            array( $this, 'complemento_callback' ),
+            'campos-gerenciaveis',
+            'setting_section_id'
+        );
+
 
         add_settings_field(
             'valores',
@@ -351,8 +352,7 @@ class SettingsPage
             'setting_section_id'
         );
 
-
-
+        
     }
 
     /**
@@ -377,7 +377,7 @@ class SettingsPage
 
         if( isset( $input['tipo'] ) )
         {
-            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file', 'attachment', 'date-range')))
+            if( in_array($input['tipo'], array('wp_title', 'wp_content', 'text', 'checkbox', 'radio', 'textarea', 'select', 'email', 'select_estado', 'select_municipio', 'calendario', 'file', 'attachment', 'date-range', 'checkbox_with_text')))
             {
                 $sanitized_input['tipo'] = $input['tipo'];
             }
@@ -400,6 +400,11 @@ class SettingsPage
         if( isset( $input['visivel'] ) )
             $sanitized_input['visivel'] = absint( $input['visivel'] );
 
+        if( isset( $input['texto_complementar'] ) )
+        {
+            $sanitized_input['texto_complementar'] = sanitize_text_field( $input['texto_complementar'] );
+            $sanitized_input['nome'] = sanitize_title( $input['texto_complementar'] );
+        }
 
         $this->proposals_custom_fields_options[] = $sanitized_input;
 
@@ -455,6 +460,7 @@ class SettingsPage
                 <option value="wp_content">Conteudo WordPress</option>
                 <option value="email">E-mail</option>
                 <option value="checkbox">Checkbox</option>
+                <option value="checkbox_with_text">Checkbox + Texto</option>
                 <option value="textarea">Textarea</option>
                 <option value="radio">Radio</option>
                 <option value="select">Select</option>
@@ -483,6 +489,14 @@ class SettingsPage
         printf(
             '<input type="text" id="valores" name="my_option_name[valores]" value="%s" class="large-text"/><small> Digite os valores separados por @</small>',
             isset( $this->options['valores'] ) ? esc_attr( $this->options['valores']) : ''
+        );
+    }
+
+    public function complemento_callback()
+    {
+        printf(
+            '<input type="text" id="texto_complementar" name="my_option_name[texto_complementar]" value="%s" class="regular-text" />',
+            isset( $this->options['texto_complementar'] ) ? esc_attr( $this->options['texto_complementar']) : ''
         );
     }
 

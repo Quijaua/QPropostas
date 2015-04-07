@@ -39,6 +39,7 @@
         <th class="row-title">Nome</th>
         <th>Obrigatório</th>
         <th>Tipo</th>
+        <th>Texto complementar</th>
         <th>Valores</th>
         <th>Exibir</th>
         <th>Ações</th>
@@ -72,6 +73,7 @@
         <td scope="row"><label for="tablecell"><?php echo $custom_field['label']; ?></label></td>
         <td><?php echo $obrigatorio; ?></td>
         <td><?php echo $custom_field['tipo']; ?></td>
+        <td><?php echo $custom_field['texto_complementar']; ?></td>
         <td><?php echo $valores; ?></td>
         <td><?php echo $visivel; ?></td>
         <td>
@@ -102,6 +104,7 @@
                                     <option value="text" <?php if($custom_field['tipo'] === "text") echo 'selected="selected"';?>>Texto</option>
                                     <option value="email" <?php if($custom_field['tipo'] === "email") echo 'selected="selected"';?>>E-mail</option>
                                     <option value="checkbox" <?php if($custom_field['tipo'] === "checkbox") echo 'selected="selected"';?>>Checkbox</option>
+                                    <option value="checkbox_with_text" <?php if($custom_field['tipo'] === "checkbox_with_text") echo 'selected="selected"';?>>Checkbox + Texto</option>
                                     <option value="textarea" <?php if($custom_field['tipo'] === "textarea") echo 'selected="selected"';?>>Textarea</option>
                                     <option value="radio" <?php if($custom_field['tipo'] === "radio") echo 'selected="selected"';?>>Radio</option>
                                     <option value="select" <?php if($custom_field['tipo'] === "select") echo 'selected="selected"';?>>Select</option>
@@ -111,7 +114,14 @@
                                     <option value="attachment" <?php if($custom_field['tipo'] === "attachment") echo 'selected="selected"';?>>Anexo</option>
                                     <option value="calendario" <?php if($custom_field['tipo'] === "calendario") echo 'selected="selected"';?>>Calendario</option>
                                     <option value="date-range" <?php if($custom_field['tipo'] === "date-range") echo 'selected="selected"';?>>Periodo</option>
+                                    
                                 </select>
+                                </td>
+                                </tr>
+                                <tr>
+                                <th>Texto complementar</th>
+                                <td>
+                                    <input type="text" id="texto_complementar" name="my_option_name[texto_complementar]" value="<?php echo $custom_field['texto_complementar']; ?>" class="regular-text">
                                 </td>
                                 </tr>
                                 <tr>
