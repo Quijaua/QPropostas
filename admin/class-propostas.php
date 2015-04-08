@@ -284,14 +284,14 @@ class Propostas_Admin {
                 {
                     $html .= '<li><input name="'.$field['nome'].'[]" type="checkbox" value="'.$option.'"  '.$required.'/>'.$option;
                     
-                    if("checkbox" === $field['tipo'] AND !empty($field['texto_complementar'])) {
+                    if("checkbox_with_text" === $field['tipo'] AND !empty($field['texto_complementar'])) {
                         $html .= '<label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
                         $html .= '<input type="text" name="'.$field['nome'].'[]">'; 
                     }
                     $html .=  '</li>';
                 }
                 $html .= '</ul>';
-                if("checkbox_with_text" === $field['tipo']) {
+                if("checkbox" === $field['tipo'] AND !empty($field['texto_complementar'] )) {
                         $html .= '<label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
                         $html .= '<input type="text" name="'.$field['nome'].'[]">';                      
                 }
