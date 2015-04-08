@@ -16,14 +16,14 @@
 
                     }
 
-                    if( "checkbox_with_text" == $field['tipo'])
+                    if( "checkbox_with_text" == $field['tipo'] OR  "checkbox" == $field['tipo'])
                     {
                       $html .= '<label for="'.$field['nome'].'">'.$field['label'].':
                             <input  name="'.$field['nome'].'" type="text" id="'.$field['nome'].'" value="'.esc_attr(implode(',', $detalhes_proposta[$field['nome']])).'"  class="large-text"/>
                         </label><br />';      
                     }
 
-                    if( "checkbox" == $field['tipo'])
+                    /*if( "checkbox" == $field['tipo'])
                     {
                         $html .= '<label for="'.$field['nome'].'">'.$field['label'].':</br>';
 
@@ -40,7 +40,7 @@
                             $html .= '<input name="'.$field['nome'].'" type="checkbox" value="'.$option.'" '.$strChecked.'/>'.$option;
                         }
                         $html .= '</label><br />';
-                    }
+                    }*/
 
                     if( "textarea" == $field['tipo'])
                     {
