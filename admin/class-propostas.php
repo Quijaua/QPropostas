@@ -290,11 +290,13 @@ class Propostas_Admin {
                     }
                     $html .=  '</li>';
                 }
-                $html .= '</ul>';
                 if("checkbox" === $field['tipo'] AND !empty($field['texto_complementar'] )) {
-                        $html .= '<label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
-                        $html .= '<input type="text" name="'.$field['nome'].'[]">';                      
+                        $html .= '<li><input type="checkbox" name="'.$field['nome'].'[]"><label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
+                        $html .= '<input type="text" name="'.$field['nome'].'[]"></li>';                      
                 }
+                $html .= '</ul>';
+                
+
 
                 $html .='</label><br />';
             }
