@@ -420,14 +420,13 @@ class SettingsPage
         if( isset( $input['visivel'] ) )
             $sanitized_input['visivel'] = absint( $input['visivel'] );
 
-        if( isset( $input['texto_complementar'] ) )
+        if( !empty( $input['texto_complementar'] ) )
         {
             $sanitized_input['texto_complementar'] = sanitize_text_field( $input['texto_complementar'] );
             $sanitized_input['nome'] = sanitize_title( $input['texto_complementar'] );
         }
 
         $this->proposals_custom_fields_options[] = $sanitized_input;
-
         $this->update_custom_fields();
 
     }

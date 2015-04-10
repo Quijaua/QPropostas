@@ -88,7 +88,7 @@ class Propostas_Admin {
         {
             if (!wp_verify_nonce($_POST['nonce_form_inscricao'], 'handle_form_inscricao'))
             {
-                die('Submit invÃ¡lido');
+                die('Submit inválido');
             }
             else
             {
@@ -208,7 +208,6 @@ class Propostas_Admin {
 
         $fields = $this->settings_page->get_custom_fields();
 
-
         $html = '<form id="frm-inscricao" method="post" action="" enctype="multipart/form-data">
             <fieldset>';
 
@@ -291,7 +290,7 @@ class Propostas_Admin {
                     $html .=  '</li>';
                 }
                 if("checkbox" === $field['tipo'] AND !empty($field['texto_complementar'] )) {
-                        $html .= '<li><input type="checkbox" name="'.$field['nome'].'[]"><label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
+                        $html .= '<li><input type="checkbox" name="'.$field['nome'].'[]" value="'.$field['texto_complementar'].'"><label for="'.$field['nome'].'">'.$field['texto_complementar'].':</br>';
                         $html .= '<input type="text" name="'.$field['nome'].'[]"></li>';                      
                 }
                 $html .= '</ul>';

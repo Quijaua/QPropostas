@@ -2,7 +2,7 @@
 <?php
     if("POST" === $_SERVER['REQUEST_METHOD'])
     {
-
+        
         if(isset($_POST['reset']))
         {
             $this->reset();
