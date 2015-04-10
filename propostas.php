@@ -25,7 +25,7 @@ if( !defined('PLUGIN_DIR_PATH') ) {
 }
 
 if( !defined('PLUGIN_URL') ) {
-    define('PLUGIN_URL', plugins_url() . '/propostas/' );
+    define('PLUGIN_URL', plugins_url() . '/'. basename(dirname(__FILE__)) . '/' );
 }
 
 // If this file is called directly, abort.
