@@ -595,7 +595,10 @@ class Propostas_Admin {
             {
                 fputcsv($output, array_keys($proposals[0]));
                 foreach($proposals as $proposal)
-                {
+                {   
+                    if( is_array($proposal)) {
+                        $proposal = implode("|", $proposal);
+                    }
                     fputcsv($output, $proposal);
                 }
             }
