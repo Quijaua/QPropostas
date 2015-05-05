@@ -525,6 +525,7 @@ class Propostas_Admin {
                 exit();
             }
         }
+	
 
         function custom_bulk_admin_notices() {
             global $post_type, $pagenow;
@@ -582,7 +583,21 @@ class Propostas_Admin {
             }
             /* Restore original Post Data */
             wp_reset_postdata();
-            
+           
+	    if( !empty($proposals)) {
+            	
+		foreach($proposals as $indexProposal => $proposal) {
+			foreach($proposal as $key => $item) {
+				if(is_array($item)) {
+					$tempArray = array_filter($item);
+					$proposals[$indexProposal][$key] = implode(',', $tempArray);
+				}
+				
+			}
+			
+		}
+            }		
+	    
             // output headers so that the file is downloaded rather than displayed
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename=propostas'.time().'.csv');
@@ -595,11 +610,8 @@ class Propostas_Admin {
             {
                 fputcsv($output, array_keys($proposals[0]));
                 foreach($proposals as $proposal)
-                {   
-                    if( is_array($proposal)) {
-                        $proposal = implode("|", $proposal);
-                    }
-                    fputcsv($output, $proposal);
+                {
+		    fputcsv($output, $proposal);
                 }
             }
             exit;
